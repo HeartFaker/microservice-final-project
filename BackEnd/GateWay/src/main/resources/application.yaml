@@ -1,0 +1,71 @@
+server:
+  port: 87
+spring:
+  application:
+    name: gateway  # 服务名称
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 110.40.206.206:8848  # nacos端口
+        namespace: 009a3413-5eb7-4ca5-a021-281a84dde095
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**  # 路由断言 判断请求是否符合当前路由
+        - id: forum-service
+          uri: lb://forum-service
+          predicates:
+            - Path=/forum/**
+        - id: forum-service
+          uri: lb://forum-service
+          predicates:
+            - Path=/upload/**
+        - id: administrator-service
+          uri: lb://administrator-service
+          predicates:
+            - Path=/admin/**
+        - id: player-service
+          uri: lb://player-service
+          predicates:
+            - Path=/player/**
+        - id: player-service
+          uri: lb://player-service
+          predicates:
+            - Path=/game/**
+        - id: player-service
+          uri: lb://player-service
+          predicates:
+            - Path=/team/**
+        - id: news-service
+          uri: lb://news-service
+          predicates:
+            - Path=/news/**
+        - id: news-service
+          uri: lb://news-service
+          predicates:
+            - Path=/token-news/**
+
+jwt:
+  token:
+    signKey: superusers  # 密钥
+  auth:
+    excludePaths:  # 无需登录的请求路径
+      - /search/**  # 搜索不需要检查JWT令牌
+      - /users/login  # 登录
+      - /users/register  # 注册
+#      - /forum/posts #管理员获取全部帖子
+#      - /forum/post
+      - /admin/login/getCode # 管理员获取验证码
+      - /admin/login/checkCode  # 校验验证码
+      - /player/**
+      - /game
+      - /game/info
+      - /game/detail
+      - /team/**
+      - /news/**
+    bothPaths:  # 登录和未登录都需要校验的请求路径
+      - /users/login-status
+      - /forum  # 登录时有可能有偏好
+      - /token-news/**
